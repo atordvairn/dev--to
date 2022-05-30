@@ -1,5 +1,6 @@
 <script>
   import axios from "axios";
+  import "./global.css";
 
   var posts = [];
   let view_post = false;
@@ -164,8 +165,8 @@
       width: 50vw;
     }
 
-    .img {
+    /*.img {
       width: 50%;
-    }
+    }*/
   }
 </style>
