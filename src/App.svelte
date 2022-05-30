@@ -64,14 +64,14 @@
           readwebdev
         {/if}
       </span>
-      <span
+      <!--span
         on:click={() => {
           document.querySelector("body").style =
             "background: black;color:white;";
         }}
       >
         dark
-      </span>
+      </span-->
     </div>
   </nav>
   <br />
@@ -103,37 +103,46 @@
     </article>
   {:else}
     <!--feed section-->
-    {#each posts as post}
-      <div
-        class="cont m-3"
-        id={post.id}
-        on:click={() => {
-          view_post = true;
-          current__post = post.id;
-          log(current__post);
-          loadUpPost(current__post);
-        }}
-      >
-        <h3>
-          {post.title}
-        </h3>
-        {#if post.image}
-          <img src={post.image} alt="cover img" class="img" />
-        {/if}
-        <h5>
-          {post.description}
-        </h5>
-        <a href={"#"}> read more... </a>
-      </div>
-      <hr />
-    {/each}
+    <div>
+      {#each posts as post}
+        <div class="cont m-auto">
+          <div
+            class="cont m-3"
+            id={post.id}
+            on:click={() => {
+              view_post = true;
+              current__post = post.id;
+              log(current__post);
+              loadUpPost(current__post);
+            }}
+          >
+            <h3>
+              {post.title}
+            </h3>
+            {#if post.image}
+              <img src={post.image} alt="cover img" class="img" />
+            {/if}
+            <h5>
+              {post.description}
+            </h5>
+            <a href={"#"}> read more... </a>
+          </div>
+          <hr />
+        </div>
+      {/each}
+    </div>
   {/if}
 </div>
 
-<style>
+<style global>
+  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
+  
+  *{
+    font-family: 'Open Sans', sans-serif;
+  }
+
   .cont,
   hr {
-    margin: 1rem;
     margin: auto;
     cursor: pointer;
   }
@@ -141,11 +150,12 @@
   .userImg {
     height: 30px;
     width: 30px;
-    border-radius: 10px;
+    border-radius: 6px;
   }
 
   img {
-    width: 100vw;
+    width: 100%;
+    border-radius: 6px;
   }
 
   @media (min-width: 801px) {
@@ -155,7 +165,7 @@
     }
 
     .img {
-      width: 50vw;
+      width: 50%;
     }
   }
 </style>
