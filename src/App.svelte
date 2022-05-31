@@ -1,4 +1,12 @@
 <script>
+  import {
+    Router,
+    Link,
+    Route,
+    useLocation,
+    navigate,
+    useNavigate,
+  } from "svelte-navigator";
   import axios from "axios";
   import "./global.css";
 
@@ -6,6 +14,9 @@
   let view_post = false;
   let current__post;
   let postDetail = {};
+  let location_app;
+  let userInfo = {};
+  let userArticles = [];
 
   function log(text) {
     console.log(text);
@@ -45,27 +56,57 @@
       };
     });
   }
+
+  async function loadUser(username) {
+    axios
+      .get("https://dev.to/api/users/by_username?url=" + username)
+      .then((res) => {
+        let data = res.data;
+        log(data.profile_image);
+        userInfo = {
+          username: username,
+          name: data.name,
+          img: data.profile_image,
+          description: data.summary,
+          joined: data.joined_at,
+          github: data.github_username,
+          twitter: data.twitter_username,
+        };
+      });
+
+    axios
+      .get("https://dev.to/api/articles?username=" + username)
+      .then((res) => {
+        let data = res.data;
+        userArticles = data;
+      });
+  }
+
+  setInterval(() => {
+    location_app = location.pathname;
+  }, 500);
 </script>
 
-<div class="app">
-  <nav
-    class="navbar fixed-top navbar-light bg-light navbar-expand-lg navbar-light bg-light"
-  >
-    <div class="container-fluid">
-      <span class="navbar-brand m-2">
-        {#if view_post}
-          <div
-            on:click={() => {
-              view_post = false;
-            }}
-          >
-            <i class="fa fa-angle-left" />
-          </div>
-        {:else}
-          readwebdev
-        {/if}
-      </span>
-      <!--span
+<Router>
+  <div class="app">
+    <nav
+      class="navbar fixed-top navbar-light bg-light navbar-expand-lg navbar-light bg-light"
+    >
+      <div class="container-fluid">
+        <span class="navbar-brand m-2">
+          {#if location_app !== "/"}
+            <div
+              on:click={() => {
+                navigate("/");
+              }}
+            >
+              <i class="fa fa-angle-left" />
+            </div>
+          {:else}
+            readwebdev
+          {/if}
+        </span>
+        <!--span
         on:click={() => {
           document.querySelector("body").style =
             "background: black;color:white;";
@@ -73,79 +114,168 @@
       >
         dark
       </span-->
-    </div>
-  </nav>
-  <br />
-  <br />
-  <br />
-  {#if view_post}
-    <img src={postDetail.img} class="img" alt="" />
-    <h1>
-      {postDetail.title}
-    </h1>
-    <h4>
-      written at: {new Date(postDetail.time).toLocaleDateString() +
-        "-" +
-        new Date(postDetail.time).toLocaleTimeString()}
-    </h4>
-    <h4 style="margin: auto;display: flex;gap: 0.35rem;">
-      by:
-      <img class="userImg" src={postDetail.userImg} alt="" />
-      <a
-        href="http://dev.to/{postDetail.username}"
-        target="_blank"
-        rel="noopener noreferrer"
-      >
-        {postDetail.userName}
-      </a>
-    </h4>
-    <article>
-      {@html postDetail.html}
-    </article>
-  {:else}
-    <!--feed section-->
-    <div>
-      {#each posts as post}
-        <div class="cont m-auto">
-          <div
-            class="cont m-3"
-            id={post.id}
-            on:click={() => {
-              view_post = true;
-              current__post = post.id;
-              log(current__post);
-              loadUpPost(current__post);
-            }}
-          >
-            <h3>
-              {post.title}
-            </h3>
-            {#if post.image}
-              <img src={post.image} alt="cover img" class="img" />
-            {/if}
-            <h5>
-              {post.description}
-            </h5>
-            <a href={"#"}> read more... </a>
+      </div>
+    </nav>
+    <br />
+    <br />
+    <br />
+    <Route path="/">
+      <!--{#if view_post}
+        <img src={postDetail.img} class="img" alt="" />
+        <h1>
+          {postDetail.title}
+        </h1>
+        <h4>
+          written at: {new Date(postDetail.time).toLocaleDateString() +
+            "-" +
+            new Date(postDetail.time).toLocaleTimeString()}
+        </h4>
+        <h4 style="margin: auto;display: flex;gap: 0.35rem;">
+          by:
+          <img class="userImg" src={postDetail.userImg} alt="" />
+          <Link to="/user/{postDetail.username}">
+            {postDetail.userName}
+          </Link>
+        </h4>
+        <article>
+          {@html postDetail.html}
+        </article>
+      {:else}-->
+      <!--feed section-->
+      <div>
+        {#each posts as post}
+          <div class="cont m-auto a ">
+            <Link to="/post/{post.id}">
+              <div
+                class="cont m-3"
+                id={post.id}
+                on:click={() => {
+                  /*view_post = true;
+                current__post = post.id;
+                log(current__post);*/
+                  loadUpPost(current__post);
+                }}
+              >
+                <h3>
+                  {post.title}
+                </h3>
+                {#if post.image}
+                  <img src={post.image} alt="cover img" class="img" />
+                {/if}
+                <h5>
+                  {post.description}
+                </h5>
+                <a href={"#"}> read more... </a>
+              </div>
+              <hr />
+            </Link>
           </div>
-          <hr />
+        {/each}
+      </div>
+      <!--{/if}-->
+    </Route>
+    <Route path="/user/:username" let:params>
+      <div class={loadUser(params.username)}>
+        <div class="m-3 text-center">
+          <img class="userImage" src={userInfo.img} alt="" />
+          <h4>
+            {userInfo.name}
+          </h4>
+          <h6>
+            {userInfo.description}
+          </h6>
+          <div class="gap-2 m-2 flex">
+            {#if userInfo.github}
+              <a
+                class="a"
+                href="http://github.com/{userInfo.github}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-github" />
+              </a>
+            {/if}
+            {#if userInfo.twitter}
+              <a
+                class="a"
+                href="http://twitter.com/{userInfo.twitter}"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                <i class="fa-brands fa-twitter" />
+              </a>
+            {/if}
+          </div>
         </div>
-      {/each}
-    </div>
-  {/if}
-</div>
+      </div>
+      <div>
+        {#each userArticles as post}
+          <div class="cont m-auto">
+            <Link class="a" to="/post/{post.id}">
+              <div class="cont m-3" id={post.id} on:click={() => {}}>
+                <h3>
+                  {post.title}
+                </h3>
+                {#if post.image}
+                  <img src={post.image} alt="cover img" class="img" />
+                {/if}
+                <h5>
+                  {post.description}
+                </h5>
+                <a href={"#"}> read more... </a>
+              </div>
+              <hr />
+            </Link>
+          </div>
+        {/each}
+      </div>
+    </Route>
+    <Route path="/post/:id" let:params>
+      <img src={postDetail.img} class="img {loadUpPost(params.id)}" alt="" />
+      <h1>
+        {postDetail.title}
+      </h1>
+      <h4>
+        written at: {new Date(postDetail.time).toLocaleDateString() +
+          "-" +
+          new Date(postDetail.time).toLocaleTimeString()}
+      </h4>
+      <h4 style="margin: auto;display: flex;gap: 0.35rem;">
+        by:
+        <img class="userImg" src={postDetail.userImg} alt="" />
+        <Link to="/user/{postDetail.username}">
+          {postDetail.userName}
+        </Link>
+      </h4>
+      <article>
+        {@html postDetail.html}
+      </article>
+    </Route>
+  </div>
+</Router>
 
 <style global>
-  @import url('https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap');
-  
-  *{
-    font-family: 'Open Sans', sans-serif;
+  @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap");
+
+  * {
+    font-family: "Open Sans", sans-serif;
+  }
+
+  .a {
+    color: inherit;
+    text-decoration: none;
   }
 
   .cont,
   hr {
     margin: auto;
     cursor: pointer;
+  }
+
+  .userImage {
+    height: 100px;
+    width: 100px;
+    border-radius: 5px;
   }
 
   .userImg {
