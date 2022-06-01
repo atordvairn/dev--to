@@ -17,7 +17,7 @@
     console.log(text);
   }
 
-  axios.get("https://dev.to/api/tags?per_page=50").then((res) => {
+  axios.get("https://dev.to/api/tags?per_page=100").then((res) => {
     let data = res.data;
     data.forEach((tag) => {
       console.log(tag);
@@ -132,42 +132,12 @@
         <span>
           <Link to="/tags">tags</Link>
         </span>
-        <!--span
-        on:click={() => {
-          document.querySelector("body").style =
-            "background: black;color:white;";
-        }}
-      >
-        dark
-      </span-->
       </div>
     </nav>
     <br />
     <br />
     <br />
     <Route path="/">
-      <!--{#if view_post}
-        <img src={postDetail.img} class="img" alt="" />
-        <h1>
-          {postDetail.title}
-        </h1>
-        <h4>
-          written at: {new Date(postDetail.time).toLocaleDateString() +
-            "-" +
-            new Date(postDetail.time).toLocaleTimeString()}
-        </h4>
-        <h4 style="margin: auto;display: flex;gap: 0.35rem;">
-          by:
-          <img class="userImg" src={postDetail.userImg} alt="" />
-          <Link to="/user/{postDetail.username}">
-            {postDetail.userName}
-          </Link>
-        </h4>
-        <article>
-          {@html postDetail.html}
-        </article>
-      {:else}-->
-      <!--feed section-->
       <div>
         {#each posts as post}
           <div class="cont m-auto a">
@@ -175,12 +145,6 @@
               <div
                 class="cont m-3"
                 id={post.id}
-                on:click={() => {
-                  /*view_post = true;
-                current__post = post.id;
-                log(current__post);*/
-                  loadUpPost(current__post);
-                }}
               >
                 <h3>
                   {post.title}
@@ -294,9 +258,6 @@
               <div
                 class="cont m-3"
                 id={post.id}
-                on:click={() => {
-                  loadUpPost(current__post);
-                }}
               >
                 <h3>
                   {post.title}
