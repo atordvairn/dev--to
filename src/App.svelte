@@ -3,9 +3,7 @@
     Router,
     Link,
     Route,
-    useLocation,
-    navigate,
-    useNavigate,
+    navigate
   } from "svelte-navigator";
   import axios from "axios";
   import "./global.css";
@@ -162,7 +160,7 @@
                 {#if post.image}
                   <img src={post.image} alt="cover img" class="img" />
                 {/if}
-                <h5>
+                <h5 class="desc">
                   {post.description}
                 </h5>
                 <a href={"#"}> read more... </a>
@@ -219,10 +217,10 @@
                 {#if post.image}
                   <img src={post.image} alt="cover img" class="img" />
                 {/if}
-                <h5>
+                <h5 class="desc">
                   {post.description}
                 </h5>
-                <a href={"#"}> read more... </a>
+                <Link to={"/post/" + post.id}>read more...</Link>
               </div>
               <hr />
             </Link>
@@ -270,12 +268,17 @@
   hr {
     margin: auto;
     cursor: pointer;
+    color: black;
   }
 
   .userImage {
     height: 100px;
     width: 100px;
     border-radius: 5px;
+  }
+
+  .desc {
+    color: grey;
   }
 
   .userImg {
