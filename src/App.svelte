@@ -1,10 +1,5 @@
 <script>
-  import {
-    Router,
-    Link,
-    Route,
-    navigate
-  } from "svelte-navigator";
+  import { Router, Link, Route, navigate } from "svelte-navigator";
   import axios from "axios";
   import "./global.css";
 
@@ -15,10 +10,28 @@
   let location_app;
   let userInfo = {};
   let userArticles = [];
+  let tags = [];
+  let taggedArticles = [];
 
   function log(text) {
     console.log(text);
   }
+
+  axios.get("https://dev.to/api/tags?per_page=50").then((res) => {
+    let data = res.data;
+    data.forEach((tag) => {
+      console.log(tag);
+      tags = [
+        {
+          name: tag.name,
+          id: tag.id,
+          bg: tag.bg_color_hex,
+          color: tag.text_color_hex,
+        },
+        ...tags,
+      ];
+    });
+  });
 
   axios.get("https://dev.to/api/articles").then(function (res) {
     new Object(res.data).forEach((element) => {
@@ -37,6 +50,7 @@
   });
 
   function loadUpPost(id) {
+    postDetail = {};
     axios.get("https://dev.to/api/articles/" + id).then((res) => {
       var data = res.data;
       postDetail = {
@@ -55,7 +69,16 @@
     });
   }
 
+  async function getArticleTagged(tag) {
+    taggedArticles = [];
+    axios.get("https://dev.to/api/articles?tag=" + tag).then((res) => {
+      let data = res.data;
+      taggedArticles = data;
+    });
+  }
+
   async function loadUser(username) {
+    userInfo = [];
     axios
       .get("https://dev.to/api/users/by_username?url=" + username)
       .then((res) => {
@@ -71,6 +94,8 @@
           twitter: data.twitter_username,
         };
       });
+
+    userArticles = [];
 
     axios
       .get("https://dev.to/api/articles?username=" + username)
@@ -103,6 +128,9 @@
           {:else}
             readwebdev
           {/if}
+        </span>
+        <span>
+          <Link to="/tags">tags</Link>
         </span>
         <!--span
         on:click={() => {
@@ -142,7 +170,7 @@
       <!--feed section-->
       <div>
         {#each posts as post}
-          <div class="cont m-auto a ">
+          <div class="cont m-auto a">
             <Link to="/post/{post.id}">
               <div
                 class="cont m-3"
@@ -248,6 +276,44 @@
       <article>
         {@html postDetail.html}
       </article>
+    </Route>
+    <Route path="/tags">
+      {#each tags as tag}
+        <Link to="/tagged/{tag.name}">
+          <div class="badge" style="color: {tag.color};background: {tag.bg};">
+            {tag.name}
+          </div>
+        </Link>
+      {/each}
+    </Route>
+    <Route path="/tagged/:tag" let:params>
+      <div class={getArticleTagged(params.tag)}>
+        {#each taggedArticles as post}
+          <div class="cont m-auto a">
+            <Link to="/post/{post.id}">
+              <div
+                class="cont m-3"
+                id={post.id}
+                on:click={() => {
+                  loadUpPost(current__post);
+                }}
+              >
+                <h3>
+                  {post.title}
+                </h3>
+                {#if post.cover_image}
+                  <img src={post.cover_image} alt="cover img" class="img" />
+                {/if}
+                <h5 class="desc">
+                  {post.description}
+                </h5>
+                <a href={"#"}> read more... </a>
+              </div>
+              <hr />
+            </Link>
+          </div>
+        {/each}
+      </div>
     </Route>
   </div>
 </Router>
