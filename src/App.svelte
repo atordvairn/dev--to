@@ -4,7 +4,6 @@
   import "./global.css";
 
   var posts = [];
-  let view_post = false;
   let current__post;
   let postDetail = {};
   let location_app;
@@ -43,6 +42,7 @@
           url: data.url,
           image: data.cover_image,
           id: data.id,
+          tags: data.tags,
         };
         posts = [obj, ...posts];
       });
@@ -63,6 +63,7 @@
         tags: data.tags,
         username: data.user.username,
         userName: data.user.name,
+        reactions: data.public_reactions_count,
         time: data.published_timestamp,
         userImg: data.user.profile_image,
       };
@@ -142,10 +143,7 @@
         {#each posts as post}
           <div class="cont m-auto a">
             <Link to="/post/{post.id}">
-              <div
-                class="cont m-3"
-                id={post.id}
-              >
+              <div class="cont m-3" id={post.id}>
                 <h3>
                   {post.title}
                 </h3>
@@ -155,6 +153,11 @@
                 <h5 class="desc">
                   {post.description}
                 </h5>
+                {#if post.tags}
+                  <h6>
+                    tagged with {post.tags}
+                  </h6>
+                {/if}
                 <a href={"#"}> read more... </a>
               </div>
               <hr />
@@ -162,7 +165,6 @@
           </div>
         {/each}
       </div>
-      <!--{/if}-->
     </Route>
     <Route path="/user/:username" let:params>
       <div class={loadUser(params.username)}>
@@ -237,8 +239,17 @@
           {postDetail.userName}
         </Link>
       </h4>
+      <h6 class="m-2">
+        {#if postDetail.tags}
+          tagged: {postDetail.tags}
+        {/if}
+      </h6>
       <article>
         {@html postDetail.html}
+        <hr>
+        <p class="m-2 h3 text-center">
+          {postDetail.reactions} likes
+        </p>
       </article>
     </Route>
     <Route path="/tags">
@@ -255,10 +266,7 @@
         {#each taggedArticles as post}
           <div class="cont m-auto a">
             <Link to="/post/{post.id}">
-              <div
-                class="cont m-3"
-                id={post.id}
-              >
+              <div class="cont m-3" id={post.id}>
                 <h3>
                   {post.title}
                 </h3>
