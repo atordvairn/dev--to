@@ -50,7 +50,20 @@
   });
 
   function loadUpPost(id) {
-    postDetail = {};
+    postDetail = {
+      title: "loading..",
+      description: "loading..",
+      url: "loading..",
+      image: "loading..",
+      id: "loading..",
+      html: "loading..",
+      tags: "loading..",
+      username: "loading..",
+      userName: "loading..",
+      reactions: "loading..",
+      time: "loading..",
+      userImg: "loading..",
+    };
     axios.get("https://dev.to/api/articles/" + id).then((res) => {
       var data = res.data;
       postDetail = {
@@ -79,7 +92,15 @@
   }
 
   async function loadUser(username) {
-    userInfo = [];
+    userInfo = {
+      username: "loading..",
+      name: "loading..",
+      img: "loading..",
+      description: "loading..",
+      joined: "loading..",
+      github: "loading..",
+      twitter: "loading..",
+    };
     axios
       .get("https://dev.to/api/users/by_username?url=" + username)
       .then((res) => {
