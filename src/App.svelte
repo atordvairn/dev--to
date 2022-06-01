@@ -246,7 +246,7 @@
       </h6>
       <article>
         {@html postDetail.html}
-        <hr>
+        <hr />
         <p class="m-2 h3 text-center">
           {postDetail.reactions} likes
         </p>
