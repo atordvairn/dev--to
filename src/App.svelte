@@ -12,6 +12,7 @@
   let tags = [];
   let taggedArticles = [];
   let articleComment = [];
+  let articleReactions = {};
 
   function log(text) {
     console.log(text);
@@ -80,6 +81,15 @@
         reactions: data.public_reactions_count,
         time: data.published_timestamp,
         userImg: data.user.profile_image,
+      };
+    });
+
+    axios.get("https://dev.to/reactions?article_id=" + id).then((res) => {
+      let data = res.data;
+      articleReactions = {
+        likes: data.article_reaction_counts[0].count,
+        readingList: data.article_reaction_counts[1].count,
+        unicorn: data.article_reaction_counts[2].count,
       };
     });
   }
@@ -279,7 +289,13 @@
         {@html postDetail.html}
         <hr />
         <p class="m-2 h3 text-center">
-          {postDetail.reactions} likes
+          {articleReactions.likes}
+          <i class="fas fa-heart" style="color: #DC143C;" />
+          ,
+          {articleReactions.unicorn}
+          <i class="fas fa-star" style="color: #FFF017;" />,
+          {articleReactions.readingList}
+          <i class="fas fa-bookmark" style="color: #0047ab;" />
         </p>
         <hr />
         <h3 class="m-2">Comments:</h3>
