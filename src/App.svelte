@@ -11,6 +11,7 @@
   let userArticles = [];
   let tags = [];
   let taggedArticles = [];
+  let articleComment = [];
 
   function log(text) {
     console.log(text);
@@ -105,7 +106,7 @@
       .get("https://dev.to/api/users/by_username?url=" + username)
       .then((res) => {
         let data = res.data;
-        log(data.profile_image);
+
         userInfo = {
           username: username,
           name: data.name,
@@ -125,6 +126,14 @@
         let data = res.data;
         userArticles = data;
       });
+  }
+
+  function loadUpComments(id) {
+    articleComment = [];
+    axios.get("https://dev.to/api/comments?a_id=" + id).then((res) => {
+      let data = res.data;
+      articleComment = data;
+    });
   }
 
   setInterval(() => {
@@ -271,7 +280,33 @@
         <p class="m-2 h3 text-center">
           {postDetail.reactions} likes
         </p>
+        <hr />
+        <h3 class="m-2">Comments:</h3>
+        <div class="cont {loadUpComments(postDetail.id)}">
+          {#if articleComment.length !== 0}
+            {#each articleComment as comment}
+              <div class="card m-2 cont">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <Link to={"/user/" + comment.user.username}>
+                      {comment.user.name}
+                    </Link>
+                    <h6>
+                      at: {new Date(comment.created_at).toLocaleDateString()}
+                    </h6>
+                  </h5>
+                  <p>
+                    {@html comment.body_html}
+                  </p>
+                </div>
+              </div>
+            {/each}
+          {:else}
+            <div class="cont m-2">No Comments!</div>
+          {/if}
+        </div>
       </article>
+      <div class="mb-3 pb-3" />
     </Route>
     <Route path="/tags">
       {#each tags as tag}
