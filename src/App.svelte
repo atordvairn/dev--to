@@ -151,6 +151,7 @@
           {#if location_app !== "/"}
             <div
               on:click={() => {
+                //window.history.back()
                 navigate("/");
               }}
             >
