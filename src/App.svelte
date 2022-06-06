@@ -177,7 +177,7 @@
               <i class="fa fa-angle-left" />
             </div>
           {:else}
-            readwebdev
+            dev--to
           {/if}
         </span>
         <span class="m-auto">
