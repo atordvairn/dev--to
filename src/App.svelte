@@ -12,6 +12,7 @@
   let taggedArticles = [];
   let articleComment = [];
   let articleReactions = {};
+  let dataPostPage = [];
 
   function log(text) {
     console.log(text);
@@ -33,7 +34,7 @@
     });
   });
 
-  axios.get("https://dev.to/api/articles/latest").then(function (res) {
+  axios.get("https://dev.to/api/articles/latest?per_page=300").then(function (res) {
     //new Object(res.data).forEach((element) => {
     res.data.forEach((element) => {
       axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
@@ -97,7 +98,7 @@
 
   async function getArticleTagged(tag) {
     taggedArticles = [];
-    axios.get("https://dev.to/api/articles?tag=" + tag).then((res) => {
+    axios.get("https://dev.to/api/articles?per_page=100&tag=" + tag).then((res) => {
       let data = res.data;
       taggedArticles = data;
     });
@@ -143,7 +144,14 @@
     articleComment = [];
     axios.get("https://dev.to/api/comments?a_id=" + id).then((res) => {
       let data = res.data;
-      articleComment = data;
+      dataPostPage = data;
+    });
+  }
+
+  function loadPostsPage(page) {
+    axios.get("https://dev.to/api/articles?per_page=100&page=" + page).then((res) => {
+      let data = res.data;
+      dataPostPage = data;
     });
   }
 
@@ -171,6 +179,14 @@
           {:else}
             readwebdev
           {/if}
+        </span>
+        <span class="m-auto">
+          page:
+          {#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as page}
+            <Link to={"/page/" + page}>
+              {page}
+            </Link>
+          {/each}
         </span>
         <span>
           <Link to="/tags">tags</Link>
@@ -338,6 +354,29 @@
     <Route path="/tagged/:tag" let:params>
       <div class={getArticleTagged(params.tag)}>
         {#each taggedArticles as post}
+          <div class="cont m-auto a">
+            <Link to="/post/{post.id}">
+              <div class="cont m-3" id={post.id}>
+                <h3>
+                  {post.title}
+                </h3>
+                {#if post.cover_image}
+                  <img src={post.cover_image} alt="cover img" class="img" />
+                {/if}
+                <h5 class="desc">
+                  {post.description}
+                </h5>
+                <a href={"#"}> read more... </a>
+              </div>
+              <hr />
+            </Link>
+          </div>
+        {/each}
+      </div>
+    </Route>
+    <Route path="/page/:n" let:params>
+      <div class={loadPostsPage(params.n)}>
+        {#each dataPostPage as post}
           <div class="cont m-auto a">
             <Link to="/post/{post.id}">
               <div class="cont m-3" id={post.id}>
