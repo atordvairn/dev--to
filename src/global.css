@@ -2,3 +2,44 @@ iframe {
   width: 100%;
   object-fit: cover;
 }
+
+.a {
+  color: inherit;
+  text-decoration: none;
+}
+
+.cont,
+hr {
+  margin: auto;
+  cursor: pointer;
+  color: black;
+}
+
+.userImage {
+  height: 100px;
+  width: 100px;
+  border-radius: 5px;
+}
+
+.desc {
+  color: grey;
+}
+
+.userImg {
+  height: 30px;
+  width: 30px;
+  border-radius: 6px;
+}
+
+img {
+  width: 100%;
+  border-radius: 6px;
+}
+
+@media (min-width: 801px) {
+
+  .cont,
+  hr {
+    width: 60vw;
+  }
+}

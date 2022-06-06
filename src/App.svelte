@@ -1,5 +1,6 @@
 <script>
   import { Router, Link, Route, navigate } from "svelte-navigator";
+  import PostRenderer from "./PostRenderer.svelte";
   import axios from "axios";
   import "./global.css";
 
@@ -18,7 +19,7 @@
     console.log(text);
   }
 
-  axios.get("https://dev.to/api/tags?per_page=100").then((res) => {
+  axios.get("https://dev.to/api/tags?per_page=200").then((res) => {
     let data = res.data;
     data.forEach((tag) => {
       console.log(tag);
@@ -34,24 +35,26 @@
     });
   });
 
-  axios.get("https://dev.to/api/articles/latest?per_page=100").then(function (res) {
-    //new Object(res.data).forEach((element) => {
-    res.data.forEach((element) => {
-      axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
-        var data = res.data;
-        var obj = {
-          title: data.title,
-          description: data.description,
-          url: data.url,
-          image: data.cover_image,
-          id: data.id,
-          tags: data.tags,
-        };
-        posts = [obj, ...posts];
+  axios
+    .get("https://dev.to/api/articles/latest?per_page=50")
+    .then(function (res) {
+      //new Object(res.data).forEach((element) => {
+      res.data.forEach((element) => {
+        axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
+          var data = res.data;
+          var obj = {
+            title: data.title,
+            description: data.description,
+            url: data.url,
+            image: data.cover_image,
+            id: data.id,
+            tags: data.tags,
+          };
+          posts = [obj, ...posts];
+        });
       });
+      //});
     });
-    //});
-  });
 
   function loadUpPost(id) {
     postDetail = {
@@ -98,10 +101,12 @@
 
   async function getArticleTagged(tag) {
     taggedArticles = [];
-    axios.get("https://dev.to/api/articles?per_page=100&tag=" + tag).then((res) => {
-      let data = res.data;
-      taggedArticles = data;
-    });
+    axios
+      .get("https://dev.to/api/articles?per_page=100&tag=" + tag)
+      .then((res) => {
+        let data = res.data;
+        taggedArticles = data;
+      });
   }
 
   async function loadUser(username) {
@@ -149,10 +154,12 @@
   }
 
   function loadPostsPage(page) {
-    axios.get("https://dev.to/api/articles?per_page=100&page=" + page).then((res) => {
-      let data = res.data;
-      dataPostPage = data;
-    });
+    axios
+      .get("https://dev.to/api/articles?per_page=100&page=" + page)
+      .then((res) => {
+        let data = res.data;
+        dataPostPage = data;
+      });
   }
 
   setInterval(() => {
@@ -198,30 +205,7 @@
     <br />
     <Route path="/">
       <div>
-        {#each posts as post}
-          <div class="cont m-auto a">
-            <Link to="/post/{post.id}">
-              <div class="cont m-3" id={post.id}>
-                <h3>
-                  {post.title}
-                </h3>
-                {#if post.image}
-                  <img class="img-fluid" src={post.image} alt="cover img" />
-                {/if}
-                <h5 class="desc">
-                  {post.description}
-                </h5>
-                {#if post.tags}
-                  <h6>
-                    tagged with {post.tags}
-                  </h6>
-                {/if}
-                <a href={"#"}> read more... </a>
-              </div>
-              <hr />
-            </Link>
-          </div>
-        {/each}
+        <PostRenderer {posts} />
       </div>
     </Route>
     <Route path="/user/:username" let:params>
@@ -259,29 +243,15 @@
         </div>
       </div>
       <div>
-        {#each userArticles as post}
-          <div class="cont m-auto">
-            <Link class="a" to="/post/{post.id}">
-              <div class="cont m-3" id={post.id} on:click={() => {}}>
-                <h3>
-                  {post.title}
-                </h3>
-                {#if post.image}
-                  <img class="img-fluid" src={post.image} alt="cover img" />
-                {/if}
-                <h5 class="desc">
-                  {post.description}
-                </h5>
-                <Link to={"/post/" + post.id}>read more...</Link>
-              </div>
-              <hr />
-            </Link>
-          </div>
-        {/each}
+        <PostRenderer posts={userArticles} />
       </div>
     </Route>
     <Route path="/post/:id" let:params>
-      <img src={postDetail.img} class="img-fluid {loadUpPost(params.id)}" alt="" />
+      <img
+        src={postDetail.img}
+        class="img-fluid {loadUpPost(params.id)}"
+        alt=""
+      />
       <h1>
         {postDetail.title}
       </h1>
@@ -345,7 +315,11 @@
     <Route path="/tags">
       {#each tags as tag}
         <Link to="/tagged/{tag.name}">
-          <div class="badge" style="color: {tag.color};background: {tag.bg};">
+          <div
+            class="badge"
+            style="color: {tag.color || 'black'};background: {tag.bg ||
+              '#c4c4c4'};"
+          >
             {tag.name}
           </div>
         </Link>
@@ -353,48 +327,12 @@
     </Route>
     <Route path="/tagged/:tag" let:params>
       <div class={getArticleTagged(params.tag)}>
-        {#each taggedArticles as post}
-          <div class="cont m-auto a">
-            <Link to="/post/{post.id}">
-              <div class="cont m-3" id={post.id}>
-                <h3>
-                  {post.title}
-                </h3>
-                {#if post.cover_image}
-                  <img src={post.cover_image} alt="cover img" class="img-fluid" />
-                {/if}
-                <h5 class="desc">
-                  {post.description}
-                </h5>
-                <a href={"#"}> read more... </a>
-              </div>
-              <hr />
-            </Link>
-          </div>
-        {/each}
+        <PostRenderer posts={taggedArticles} />
       </div>
     </Route>
     <Route path="/page/:n" let:params>
       <div class={loadPostsPage(params.n)}>
-        {#each dataPostPage as post}
-          <div class="cont m-auto a">
-            <Link to="/post/{post.id}">
-              <div class="cont m-3" id={post.id}>
-                <h3>
-                  {post.title}
-                </h3>
-                {#if post.cover_image}
-                  <img src={post.cover_image} alt="cover img" class="img-fluid" />
-                {/if}
-                <h5 class="desc">
-                  {post.description}
-                </h5>
-                <a href={"#"}> read more... </a>
-              </div>
-              <hr />
-            </Link>
-          </div>
-        {/each}
+        <PostRenderer posts={dataPostPage} />
       </div>
     </Route>
   </div>
@@ -405,49 +343,5 @@
 
   * {
     font-family: "Open Sans", sans-serif;
-  }
-
-  .a {
-    color: inherit;
-    text-decoration: none;
-  }
-
-  .cont,
-  hr {
-    margin: auto;
-    cursor: pointer;
-    color: black;
-  }
-
-  .userImage {
-    height: 100px;
-    width: 100px;
-    border-radius: 5px;
-  }
-
-  .desc {
-    color: grey;
-  }
-
-  .userImg {
-    height: 30px;
-    width: 30px;
-    border-radius: 6px;
-  }
-
-  img {
-    width: 100%;
-    border-radius: 6px;
-  }
-
-  @media (min-width: 801px) {
-    .cont,
-    hr {
-      width: 50vw;
-    }
-
-    /*.img {
-      width: 50%;
-    }*/
   }
 </style>
