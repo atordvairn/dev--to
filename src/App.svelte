@@ -14,7 +14,7 @@
   let articleComment = [];
   let articleReactions = {};
   let dataPostPage = [];
-  let currentPageForDash = 2;
+  let currentPageForDash = 1;
 
   function log(text) {
     console.log(text);
@@ -35,22 +35,20 @@
     });
   });
 
-  axios
-    .get("https://dev.to/api/articles/latest?per_page=20")
-    .then(function (res) {
-      res.data.forEach((element) => {
-        let data = element;
-        var obj = {
-          title: data.title,
-          description: data.description,
-          url: data.url,
-          image: data.cover_image,
-          id: data.id,
-          tags: data.tags,
-        };
-        posts = [obj, ...posts];
-      });
+  axios.get("https://dev.to/api/articles/?per_page=20").then(function (res) {
+    res.data.forEach((element) => {
+      let data = element;
+      var obj = {
+        title: data.title,
+        description: data.description,
+        url: data.url,
+        image: data.cover_image,
+        id: data.id,
+        tags: data.tags,
+      };
+      posts = [obj, ...posts];
     });
+  });
 
   function loadUpPost(id) {
     postDetail = {
@@ -183,14 +181,14 @@
             dev--to
           {/if}
         </span>
-        <span class="m-auto">
+        <!--span class="m-auto">
           page:
           {#each [1, 2, 3, 4, 5, 6, 7, 8, 9] as page}
             <Link to={"/page/" + page}>
               {page}
             </Link>
           {/each}
-        </span>
+        </span-->
         <span>
           <Link to="/tags">tags</Link>
         </span>
@@ -200,6 +198,108 @@
     <br />
     <br />
     <Route path="/">
+      <div class="cont rounded shadow p-3">
+        <h3>load:</h3>
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            posts = [];
+            axios
+              .get("https://dev.to/api/articles/?per_page=100&top=2")
+              .then(function (res) {
+                res.data.forEach((element) => {
+                  let data = element;
+                  var obj = {
+                    title: data.title,
+                    description: data.description,
+                    url: data.url,
+                    image: data.cover_image,
+                    id: data.id,
+                    tags: data.tags,
+                  };
+                  posts = [...posts, obj];
+                });
+              });
+          }}
+        >
+          top
+        </button>
+
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            posts = [];
+            axios
+              .get("https://dev.to/api/articles/?per_page=100&state=fresh")
+              .then(function (res) {
+                res.data.forEach((element) => {
+                  let data = element;
+                  var obj = {
+                    title: data.title,
+                    description: data.description,
+                    url: data.url,
+                    image: data.cover_image,
+                    id: data.id,
+                    tags: data.tags,
+                  };
+                  posts = [...posts, obj];
+                });
+              });
+          }}
+        >
+          fresh
+        </button>
+
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            posts = [];
+            axios
+              .get("https://dev.to/api/articles/?per_page=100&state=rising")
+              .then(function (res) {
+                res.data.forEach((element) => {
+                  let data = element;
+                  var obj = {
+                    title: data.title,
+                    description: data.description,
+                    url: data.url,
+                    image: data.cover_image,
+                    id: data.id,
+                    tags: data.tags,
+                  };
+                  posts = [...posts, obj];
+                });
+              });
+          }}
+        >
+          rising posts
+        </button>
+
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            posts = [];
+            axios
+              .get("https://dev.to/api/articles/?per_page=100")
+              .then(function (res) {
+                res.data.forEach((element) => {
+                  let data = element;
+                  var obj = {
+                    title: data.title,
+                    description: data.description,
+                    url: data.url,
+                    image: data.cover_image,
+                    id: data.id,
+                    tags: data.tags,
+                  };
+                  posts = [...posts, obj];
+                });
+              });
+          }}
+        >
+          all posts
+        </button>
+      </div>
       <div>
         <PostRenderer {posts} />
       </div>
@@ -210,7 +310,7 @@
             currentPageForDash += 1;
             axios
               .get(
-                "https://dev.to/api/articles/latest?per_page=10&page=" +
+                "https://dev.to/api/articles/?per_page=10&page=" +
                   currentPageForDash
               )
               .then(function (res) {
