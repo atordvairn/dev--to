@@ -14,6 +14,7 @@
   let articleComment = [];
   let articleReactions = {};
   let dataPostPage = [];
+  let currentPageForDash = 2;
 
   function log(text) {
     console.log(text);
@@ -22,7 +23,6 @@
   axios.get("https://dev.to/api/tags?per_page=200").then((res) => {
     let data = res.data;
     data.forEach((tag) => {
-      console.log(tag);
       tags = [
         {
           name: tag.name,
@@ -36,24 +36,20 @@
   });
 
   axios
-    .get("https://dev.to/api/articles/latest?per_page=50")
+    .get("https://dev.to/api/articles/latest?per_page=20")
     .then(function (res) {
-      //new Object(res.data).forEach((element) => {
       res.data.forEach((element) => {
-        axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
-          var data = res.data;
-          var obj = {
-            title: data.title,
-            description: data.description,
-            url: data.url,
-            image: data.cover_image,
-            id: data.id,
-            tags: data.tags,
-          };
-          posts = [obj, ...posts];
-        });
+        let data = element;
+        var obj = {
+          title: data.title,
+          description: data.description,
+          url: data.url,
+          image: data.cover_image,
+          id: data.id,
+          tags: data.tags,
+        };
+        posts = [obj, ...posts];
       });
-      //});
     });
 
   function loadUpPost(id) {
@@ -207,6 +203,36 @@
       <div>
         <PostRenderer {posts} />
       </div>
+      <div class="text-center">
+        <button
+          class="btn btn-primary m-auto"
+          on:click={() => {
+            currentPageForDash += 1;
+            axios
+              .get(
+                "https://dev.to/api/articles/latest?per_page=10&page=" +
+                  currentPageForDash
+              )
+              .then(function (res) {
+                log(res.data);
+                res.data.forEach((element) => {
+                  let data = element;
+                  var obj = {
+                    title: data.title,
+                    description: data.description,
+                    url: data.url,
+                    image: data.cover_image,
+                    id: data.id,
+                    tags: data.tags,
+                  };
+                  posts = [...posts, obj];
+                });
+              });
+          }}
+        >
+          load more
+        </button>
+      </div>
     </Route>
     <Route path="/user/:username" let:params>
       <div class={loadUser(params.username)}>
@@ -336,10 +362,14 @@
       </div>
     </Route>
   </div>
+  <!--footer-->
+  <div class="p-4 m-4">
+
+  </div>
 </Router>
 
 <style global>
   * {
-    font-family: 'Raleway', sans-serif;
+    font-family: "Raleway", sans-serif;
   }
 </style>
