@@ -339,9 +339,7 @@
 </Router>
 
 <style global>
-  @import url("https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap");
-
   * {
-    font-family: "Open Sans", sans-serif;
+    font-family: 'Raleway', sans-serif;
   }
 </style>
