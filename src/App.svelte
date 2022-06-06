@@ -206,7 +206,7 @@
                   {post.title}
                 </h3>
                 {#if post.image}
-                  <img src={post.image} alt="cover img" class="img" />
+                  <img class="img-fluid" src={post.image} alt="cover img" />
                 {/if}
                 <h5 class="desc">
                   {post.description}
@@ -267,7 +267,7 @@
                   {post.title}
                 </h3>
                 {#if post.image}
-                  <img src={post.image} alt="cover img" class="img" />
+                  <img class="img-fluid" src={post.image} alt="cover img" />
                 {/if}
                 <h5 class="desc">
                   {post.description}
@@ -281,7 +281,7 @@
       </div>
     </Route>
     <Route path="/post/:id" let:params>
-      <img src={postDetail.img} class="img {loadUpPost(params.id)}" alt="" />
+      <img src={postDetail.img} class="img-fluid {loadUpPost(params.id)}" alt="" />
       <h1>
         {postDetail.title}
       </h1>
@@ -361,7 +361,7 @@
                   {post.title}
                 </h3>
                 {#if post.cover_image}
-                  <img src={post.cover_image} alt="cover img" class="img" />
+                  <img src={post.cover_image} alt="cover img" class="img-fluid" />
                 {/if}
                 <h5 class="desc">
                   {post.description}
@@ -384,7 +384,7 @@
                   {post.title}
                 </h3>
                 {#if post.cover_image}
-                  <img src={post.cover_image} alt="cover img" class="img" />
+                  <img src={post.cover_image} alt="cover img" class="img-fluid" />
                 {/if}
                 <h5 class="desc">
                   {post.description}
