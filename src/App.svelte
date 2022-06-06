@@ -4,7 +4,6 @@
   import "./global.css";
 
   var posts = [];
-  let current__post;
   let postDetail = {};
   let location_app;
   let userInfo = {};
@@ -34,8 +33,9 @@
     });
   });
 
-  axios.get("https://dev.to/api/articles").then(function (res) {
-    new Object(res.data).forEach((element) => {
+  axios.get("https://dev.to/api/articles/latest").then(function (res) {
+    //new Object(res.data).forEach((element) => {
+    res.data.forEach((element) => {
       axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
         var data = res.data;
         var obj = {
@@ -49,6 +49,7 @@
         posts = [obj, ...posts];
       });
     });
+    //});
   });
 
   function loadUpPost(id) {
