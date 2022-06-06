@@ -34,7 +34,7 @@
     });
   });
 
-  axios.get("https://dev.to/api/articles/latest?per_page=300").then(function (res) {
+  axios.get("https://dev.to/api/articles/latest?per_page=100").then(function (res) {
     //new Object(res.data).forEach((element) => {
     res.data.forEach((element) => {
       axios.get("https://dev.to/api/articles/" + element.id).then((res) => {
