@@ -521,8 +521,25 @@
 
               xhr.onreadystatechange = function () {
                 if (xhr.readyState === 4) {
-                  console.log(xhr.status);
-                  console.log(xhr.responseText);
+                  if (JSON.parse(xhr.responseText).status == 200) {
+                    toast.fire({
+                      title: "failed",
+                      icon: "error",
+                    });
+                    setTimeout(() => {
+                      navigate("/post/" + JSON.parse(xhr.responseText).id);
+                    }, 1000);
+                  } else if (JSON.parse(xhr.responseText).status == 422) {
+                    toast.fire({
+                      title: "rate limited",
+                      icon: "warning",
+                    });
+                  } else {
+                    toast.fire({
+                      title: "failed",
+                      icon: "error",
+                    });
+                  }
                 }
               };
 
