@@ -599,7 +599,9 @@
     </Route>
   </div>
   <!--footer-->
-  <div class="p-4 m-4" />
+  <div class="mt-2" />
+  <footer class="text-center p-5 rounded m-2 bg-light">dev--to (v0.1.0)</footer>
+  <div class="mb-2" />
 </Router>
 
 <style global>
