@@ -1,6 +1,7 @@
 <script>
   import { Router, Link, Route, navigate } from "svelte-navigator";
   import PostRenderer from "./PostRenderer.svelte";
+  import Tag from "./Tag.svelte";
   import axios from "axios";
   import "./global.css";
 
@@ -57,7 +58,6 @@
       url: "loading..",
       image: "loading..",
       html: "loading..",
-      tags: "loading..",
       username: "loading..",
       userName: "loading..",
       reactions: "loading..",
@@ -384,7 +384,6 @@
           new Date(postDetail.time).toLocaleTimeString()}
       </h4>
       <h4 style="margin: auto;display: flex;gap: 0.35rem;">
-        by:
         <img class="userImg" src={postDetail.userImg} alt="" />
         <Link to="/user/{postDetail.username}">
           {postDetail.userName}
@@ -392,7 +391,13 @@
       </h4>
       <h6 class="m-2">
         {#if postDetail.tags}
-          tagged: {postDetail.tags}
+          <h6 class="d-flex taglist">
+            <!--{#each (postDetail.tags).split(",") as elm}
+              <Tag>
+                {elm}
+              </Tag>
+            {/each}-->
+          </h6>
         {/if}
       </h6>
       <article>
