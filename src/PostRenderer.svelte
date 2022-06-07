@@ -1,6 +1,6 @@
 <script>
   export let posts;
-  import { Router, Link, Route, navigate } from "svelte-navigator";
+  import { Link } from "svelte-navigator";
   import Tag from "./Tag.svelte";
 </script>
 
