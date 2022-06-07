@@ -496,21 +496,32 @@
     <Route path="/write">
       {#if !preview}
         <h1 class="display-3">Write A Post</h1>
+        <label for="UserApi" class="form-label"> Api Key: </label>
         <input
           placeholder="api key from https://dev.to/settings/account"
           bind:value={userApiKey}
           class="form-control"
+          id="UserApi"
         />
+        <label for="PostTitle" class="form-label"> Post title: </label>
         <input
           placeholder="title of the post"
           bind:value={titlePost}
           class="form-control"
+          id="PostTitle"
         />
-        <textarea bind:value={bodyPost} placeholder="content of the post" />
+        <label for="PostBody" class="form-label"> Post Body: </label>
+        <textarea
+          id="PostBody"
+          bind:value={bodyPost}
+          placeholder="content of the post"
+        />
+        <label for="PostTags" class="form-label"> Post Tags: </label>
         <input
           placeholder="javascript,webdev,codenewbie,tutorial (only 4)"
           bind:value={postTags}
           class="form-control"
+          id="PostTags"
         />
         <br />
         <!-- svelte-ignore missing-declaration -->
