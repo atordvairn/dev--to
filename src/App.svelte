@@ -2,6 +2,8 @@
   import { Router, Link, Route, navigate } from "svelte-navigator";
   import PostRenderer from "./PostRenderer.svelte";
   import Tag from "./Tag.svelte";
+  import { marked } from "marked";
+  import swal from "sweetalert2";
   import axios from "axios";
   import "./global.css";
 
@@ -16,6 +18,12 @@
   let articleReactions = {};
   let dataPostPage = [];
   let currentPageForDash = 1;
+
+  //for write
+  let userApiKey = localStorage.getItem("apiKey") || "";
+  let titlePost = "title of the post";
+  let bodyPost = "# heading \n \n content of the post you're writing about";
+  let preview = false;
 
   function log(text) {
     console.log(text);
@@ -158,6 +166,17 @@
   setInterval(() => {
     location_app = location.pathname;
   }, 500);
+
+  const toast = swal.mixin({
+    toast: true,
+    timer: 3000,
+    timerProgressBar: true,
+    position: "bottom-right",
+    showConfirmButton: false,
+  });
+
+  //save the api key in local storage
+  $: userApiKey, localStorage.setItem("apiKey", userApiKey);
 </script>
 
 <Router>
@@ -186,8 +205,13 @@
             </Link>
           {/each}
         </span-->
-        <span>
-          <Link to="/tags">tags</Link>
+        <span class="d-flex side__nav">
+          <Link to="/tags">
+            <i class="fas fa-hashtag" />
+          </Link>
+          <Link to="/write">
+            <i class="fas fa-feather" />
+          </Link>
         </span>
       </div>
     </nav>
@@ -468,6 +492,77 @@
         <PostRenderer posts={dataPostPage} />
       </div>
     </Route>
+    <Route path="/write">
+      {#if !preview}
+        <h1 class="display-3">Write A Post</h1>
+        <input
+          placeholder="api key from https://dev.to/settings/account"
+          bind:value={userApiKey}
+          class="form-control"
+        />
+        <input
+          placeholder="title of the post"
+          bind:value={titlePost}
+          class="form-control"
+        />
+        <textarea bind:value={bodyPost} placeholder="content of the post" />
+        <br />
+        <!-- svelte-ignore missing-declaration -->
+        <button
+          class="btn btn-primary"
+          on:click={() => {
+            if (userApiKey !== (undefined || null || "")) {
+              var url = "https://write-to-dev.vercel.app/api/publish";
+
+              var xhr = new XMLHttpRequest();
+              xhr.open("POST", url);
+
+              xhr.setRequestHeader("Content-Type", "application/json");
+
+              xhr.onreadystatechange = function () {
+                if (xhr.readyState === 4) {
+                  console.log(xhr.status);
+                  console.log(xhr.responseText);
+                }
+              };
+
+              var data = JSON.stringify({
+                title: titlePost,
+                body: bodyPost,
+                api_key: userApiKey,
+                tags: ["webdev", "JavaScript", "test", "only4"],
+              });
+
+              xhr.send(data);
+            } else {
+              toast.fire({
+                title: "no api key!",
+                icon: "error",
+              });
+            }
+          }}
+        >
+          publish
+        </button>
+      {:else}
+        {@html marked.parse(bodyPost)}
+      {/if}
+      <button
+        class="btn btn-warning"
+        on:click={() => {
+          if (!preview) {
+            preview = true;
+          } else {
+            preview = false;
+          }
+        }}
+      >
+        {#if preview}
+          exit
+        {/if}
+        preview
+      </button>
+    </Route>
   </div>
   <!--footer-->
   <div class="p-4 m-4" />
@@ -476,5 +571,14 @@
 <style global>
   * {
     font-family: "Raleway", sans-serif;
+  }
+
+  .side__nav {
+    gap: 10px;
+  }
+
+  textarea {
+    width: 100%;
+    height: 40vh;
   }
 </style>

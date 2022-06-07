@@ -22,8 +22,10 @@
   },
   "dependencies": {
     "axios": "^0.27.2",
+    "marked": "^4.0.16",
     "sirv-cli": "^2.0.2",
-    "svelte-navigator": "^3.1.5"
+    "svelte-navigator": "^3.1.5",
+    "sweetalert2": "^11.4.17"
   },
   "prettier": {
     "plugins": [
