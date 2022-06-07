@@ -163,7 +163,7 @@
 <Router>
   <div class="app">
     <nav
-      class="navbar fixed-top navbar-light bg-light navbar-expand-lg navbar-light bg-light"
+      class="navbar fixed-top navbar-light"
     >
       <div class="container-fluid">
         <span class="navbar-brand m-2">
