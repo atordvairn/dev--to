@@ -24,6 +24,7 @@
   let titlePost = "title of the post";
   let bodyPost = "# heading \n \n content of the post you're writing about";
   let preview = false;
+  let postTags;
 
   function log(text) {
     console.log(text);
@@ -506,6 +507,11 @@
           class="form-control"
         />
         <textarea bind:value={bodyPost} placeholder="content of the post" />
+        <input
+          placeholder="javascript,webdev,codenewbie,tutorial (only 4)"
+          bind:value={postTags}
+          class="form-control"
+        />
         <br />
         <!-- svelte-ignore missing-declaration -->
         <button
@@ -547,7 +553,7 @@
                 title: titlePost,
                 body: bodyPost,
                 api_key: userApiKey,
-                tags: ["webdev", "JavaScript", "test", "only4"],
+                tags: postTags.replace(/ /, "").split(",") || [],
               });
 
               xhr.send(data);
