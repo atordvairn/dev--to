@@ -59,24 +59,24 @@ button:focus {
   border-color: #666;
 }
 
-.article-body-image-wrapper>img,
-.ltag__twitter-tweet__media>img,
-.ltag__twitter-tweet__video>video {
+.article-body-image-wrapper > img,
+.ltag__twitter-tweet__media > img,
+.ltag__twitter-tweet__video > video {
   width: 100% !important;
   height: auto;
   border-radius: 5px;
 }
 
-.ltag__twitter-tweet__main{
+.ltag__twitter-tweet__main {
   padding: 20px;
   text-align: center;
 }
 
-.ltag__twitter-tweet__media--video-preview{
+.ltag__twitter-tweet__media--video-preview {
   display: none;
 }
 
-.ltag__twitter-tweet__profile-image{
+.ltag__twitter-tweet__profile-image {
   border-radius: 3px;
 }
 

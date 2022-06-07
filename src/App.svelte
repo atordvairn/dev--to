@@ -162,9 +162,7 @@
 
 <Router>
   <div class="app">
-    <nav
-      class="navbar fixed-top navbar-light"
-    >
+    <nav class="navbar fixed-top navbar-light">
       <div class="container-fluid">
         <span class="navbar-brand m-2">
           {#if location_app !== "/"}

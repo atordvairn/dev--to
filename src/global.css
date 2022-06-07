@@ -36,7 +36,6 @@ hr {
 }
 
 @media (min-width: 801px) {
-
   .cont,
   hr {
     width: 60vw;
