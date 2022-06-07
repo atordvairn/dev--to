@@ -56,7 +56,6 @@
       description: "loading..",
       url: "loading..",
       image: "loading..",
-      id: "loading..",
       html: "loading..",
       tags: "loading..",
       username: "loading..",
@@ -143,7 +142,7 @@
     articleComment = [];
     axios.get("https://dev.to/api/comments?a_id=" + id).then((res) => {
       let data = res.data;
-      dataPostPage = data;
+      articleComment = data;
     });
   }
 
@@ -413,27 +412,27 @@
         <hr />
         <h3 class="m-2">Comments:</h3>
         <div class="cont {loadUpComments(postDetail.id)}">
-          {#if articleComment.length !== 0}
-            {#each articleComment as comment}
-              <div class="card m-2 cont">
-                <div class="card-body">
-                  <h5 class="card-title">
-                    <Link to={"/user/" + comment.user.username}>
-                      {comment.user.name}
-                    </Link>
-                    <h6>
-                      at: {new Date(comment.created_at).toLocaleDateString()}
-                    </h6>
-                  </h5>
-                  <p>
-                    {@html comment.body_html}
-                  </p>
-                </div>
+          <!-- {#if articleComment.length !== 0}-->
+          {#each articleComment as comment}
+            <div class="card m-2 cont">
+              <div class="card-body">
+                <h5 class="card-title">
+                  <Link to={"/user/" + comment.user.username}>
+                    {comment.user.name}
+                  </Link>
+                  <h6>
+                    at: {new Date(comment.created_at).toLocaleDateString()}
+                  </h6>
+                </h5>
+                <p>
+                  {@html comment.body_html}
+                </p>
               </div>
-            {/each}
-          {:else}
+            </div>
+          {/each}
+          <!--{:else}
             <div class="cont m-2">No Comments!</div>
-          {/if}
+          {/if}-->
         </div>
       </article>
       <div class="mb-3 pb-3" />

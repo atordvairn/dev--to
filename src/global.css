@@ -30,11 +30,11 @@ hr {
   width: 30px;
   border-radius: 6px;
 }
-
+/*
 img {
   width: 100%;
   border-radius: 6px;
-}
+}*/
 
 @media (min-width: 801px) {
   .cont,

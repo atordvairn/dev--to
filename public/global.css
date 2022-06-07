@@ -58,3 +58,7 @@ button:not(:disabled):active {
 button:focus {
   border-color: #666;
 }
+
+.article-body-image-wrapper {
+  width: 100px;
+}
