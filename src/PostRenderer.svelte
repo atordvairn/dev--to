@@ -4,7 +4,7 @@
 </script>
 
 {#each posts as post}
-  <div class="cont shadow-lg p-3 mb-3 mt-2 bg-body rounded m-auto a">
+  <div class="cont shadow p-3 mb-3 mt-2 bg-body rounded m-auto a">
     <Link to="/post/{post.id}">
       <div class="" id={post.id}>
         <h3>

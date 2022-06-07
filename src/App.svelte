@@ -399,40 +399,45 @@
       </h6>
       <article>
         {@html postDetail.html}
-        <hr />
-        <p class="m-2 h3 text-center">
-          {articleReactions.likes}
-          <i class="fas fa-heart" style="color: #DC143C;" />
-          ,
-          {articleReactions.unicorn}
-          <i class="fas fa-star" style="color: #FFF017;" />,
-          {articleReactions.readingList}
-          <i class="fas fa-bookmark" style="color: #0047ab;" />
-        </p>
-        <hr />
-        <h3 class="m-2">Comments:</h3>
+        <div class="rounded shadow p-3">
+          <p class="m-2 h3 text-center">
+            {articleReactions.likes}
+            <i class="fas fa-heart" style="color: #DC143C;" />
+            ,
+            {articleReactions.unicorn}
+            <i class="fas fa-star" style="color: #FFF017;" />,
+            {articleReactions.readingList}
+            <i class="fas fa-bookmark" style="color: #0047ab;" />
+          </p>
+        </div>
+        <div class="cont mt-4">
+          <h3 class="m-2">Comments:</h3>
+        </div>
         <div class="cont {loadUpComments(postDetail.id)}">
-          <!-- {#if articleComment.length !== 0}-->
-          {#each articleComment as comment}
-            <div class="card m-2 cont">
-              <div class="card-body">
-                <h5 class="card-title">
-                  <Link to={"/user/" + comment.user.username}>
-                    {comment.user.name}
-                  </Link>
-                  <h6>
-                    at: {new Date(comment.created_at).toLocaleDateString()}
-                  </h6>
-                </h5>
-                <p>
-                  {@html comment.body_html}
-                </p>
+          {#if articleComment.length !== 0}
+            {#each articleComment as comment}
+              <div class="card m-2 cont">
+                <div class="card-body">
+                  <h5 class="card-title">
+                    <Link to={"/user/" + comment.user.username}>
+                      {comment.user.name}
+                    </Link>
+                    <h6>
+                      at: {new Date(comment.created_at).toLocaleDateString()}
+                    </h6>
+                  </h5>
+                  <p>
+                    {@html comment.body_html}
+                  </p>
+                </div>
               </div>
+            {/each}
+          {:else}
+            <div class="cont m-2">
+              <i class="fa-solid fa-question" />
+              No Comments!
             </div>
-          {/each}
-          <!--{:else}
-            <div class="cont m-2">No Comments!</div>
-          {/if}-->
+          {/if}
         </div>
       </article>
       <div class="mb-3 pb-3" />
